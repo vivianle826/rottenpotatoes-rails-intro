@@ -5,6 +5,7 @@ class Movie < ActiveRecord::Base
   #  movies with those ratings
   # if ratings_list is nil, retrieve ALL movies
     if ratings_list.kind_of?(Array)==true 
+      byebug
       Movie.where(rating: ratings_list)
     else 
       Movie.all 
