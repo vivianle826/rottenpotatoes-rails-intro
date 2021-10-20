@@ -6,28 +6,74 @@
     # will render app/views/movies/show.<extension> by default
   end
 
-  def index
+  def index 
+    @all_ratings = Movie.all_ratings
+    if params[:ratings] != nil
+      session[:ratings] = params[:ratings]
+    end 
+    if session[:ratings]==nil
+      @movies = Movie.all 
+      @ratings_to_show =[]
+    else
+      @movies = Movie.with_ratings(session[:ratings].keys)
+      @ratings_to_show = session[:ratings].keys 
+    end 
     sort = params[:sort] || session[:sort]
+    if params[:sort] != nil 
+      session[:sort] = params[:sort]
+    end 
     if sort == "title"
       @title_header = 'p-3 mb-2 bg-warning text-dark'
-      ordering = {:order => :title}
-      @movies = Movie.sorted_by_name
-    elsif sort == "date"
+      @movies = @movies.sorted_by_name 
+    elsif sort == 'date'
       @release_date_header = 'p-3 mb-2 bg-warning text-dark'
-      @movies = Movie.sorted_by_date
-    elsif params[:ratings]==nil
-      @movies = Movie.all 
-    else    
-      @movies = Movie.with_ratings(params[:ratings].keys)
-    end 
-    @all_ratings = Movie.all_ratings 
-    if params[:ratings]==nil
-      @ratings_to_show =[]
-    else 
-      @ratings_to_show = Movie.with_ratings(params[:ratings].keys)
+      @movies = @movies.sorted_by_date 
     end
+  end 
     
-  end
+    #byebug
+      
+#    if sort == nil
+#      if params[:ratings]==nil
+#        @movies = Movie.all 
+#        @ratings_to_show =[]
+#      else    
+#        @movies = Movie.with_ratings(params[:ratings].keys)
+#        @ratings_to_show = params[:ratings].keys 
+#      end 
+#    elsif sort == "title"
+ #     @title_header = 'p-3 mb-2 bg-warning text-dark'
+#      if params[:ratings]==nil
+#        @movies = Movie.sorted_by_name 
+#        @ratings_to_show =[]
+#      else 
+#        @movies = Movie.with_ratings(params[:ratings].keys).sorted_by_name
+#        @ratings_to_show = params[:ratings].keys
+#      end 
+#    elsif sort == "date"
+#      @release_date_header = 'p-3 mb-2 bg-warning text-dark'
+#      if params[:ratings]==nil
+#        @movies = Movie.sorted_by_date
+#        @ratings_to_show =[]
+#      else 
+#        @movies = Movie.with_ratings(params[:ratings].keys).sorted_by_name
+#        @ratings_to_show = params[:ratings].keys
+ #     end 
+  #  elsif params[:ratings]==nil
+  #    @movies = Movie.all 
+  #    @ratings_to_show =[]
+  #  else    
+  #    @movies = Movie.with_ratings(params[:ratings].keys)
+      #@ratings_to_show = Movie.with_ratings(params[:ratings].keys)
+#    end 
+    
+#    if params[:ratings]==nil
+#      @ratings_to_show =[]
+#    else 
+#      @ratings_to_show = Movie.with_ratings(params[:ratings].keys)
+#    end
+    
+#  end
       
       
 
