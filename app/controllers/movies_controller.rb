@@ -1,4 +1,4 @@
-class MoviesController < ApplicationController
+ class MoviesController < ApplicationController
 
   def show
     id = params[:id] # retrieve movie ID from URI route
@@ -7,9 +7,17 @@ class MoviesController < ApplicationController
   end
 
   def index
-    if params[:ratings]==nil
+    sort = params[:sort] || session[:sort]
+    if sort == "title"
+      @title_header = 'p-3 mb-2 bg-warning text-dark'
+      ordering = {:order => :title}
+      @movies = Movie.sorted_by_name
+    elsif sort == "date"
+      @release_date_header = 'p-3 mb-2 bg-warning text-dark'
+      @movies = Movie.sorted_by_date
+    elsif params[:ratings]==nil
       @movies = Movie.all 
-    else 
+    else    
       @movies = Movie.with_ratings(params[:ratings].keys)
     end 
     @all_ratings = Movie.all_ratings 
@@ -17,8 +25,11 @@ class MoviesController < ApplicationController
       @ratings_to_show =[]
     else 
       @ratings_to_show = Movie.with_ratings(params[:ratings].keys)
-    end 
+    end
+    
   end
+      
+      
 
   def new
     # default: render 'new' template

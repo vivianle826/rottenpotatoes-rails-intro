@@ -13,4 +13,13 @@ class Movie < ActiveRecord::Base
    def self.all_ratings
      Movie.pluck(:rating).uniq
    end 
+  
+  def self.sorted_by_name
+    Movie.order("lower(title) ASC").all
+  end 
+  
+  def self.sorted_by_date
+    Movie.order(:release_date)
+  end 
+  
 end
